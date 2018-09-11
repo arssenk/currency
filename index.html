@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles/converter.css" type="text/css"/>
+    <script src="./scripts/helper-func.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <title>Title</title>
+
+</head>
+<body class="main-page">
+<p class="main-page__title">
+    Прогноз збереження
+</p>
+<div class="converter">
+    <section class="convert-table">
+        <section class="convert-table__input-fields">
+            <h1 class="convert-table__title">
+                Збереження
+            </h1>
+            <section class="convert-table__input-section">
+                <img src="./img/euro-currency-symbol.svg" alt="EUR" class="convert-table__currency-img">
+                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_1" value=0
+                       onchange="addTo(this.value)">
+            </section>
+            <section class="convert-table__input-section">
+                <img src="./img/dollar-currency-sign.svg" alt="EUR" class="convert-table__currency-img">
+                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_2" value=0
+                       onchange="addTo(this.value)"></section>
+
+            <section class="convert-table__input-section">
+                <img src="./img/pound-symbol-variant.svg" alt="EUR" class="convert-table__currency-img">
+                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_3" value=0
+                       onchange="addTo(this.value)">
+            </section>
+
+            <section class="convert-table__input-section">
+                <img src="./img/dollar-currency-symbol.svg" alt="EUR" class="convert-table__currency-img">
+                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_4" value=0
+                       onchange="addTo(this.value)"></section>
+
+
+        </section>
+        <section class="convert-table__converted-currency">
+            <h1 class="convert-table__title">
+                В моїй валюті
+            </h1>
+            <output class="convert-table__output-exchange" id="currency_converted_1"></output>
+            <output class="convert-table__output-exchange" id="currency_converted_2"></output>
+            <output class="convert-table__output-exchange" id="currency_converted_3"></output>
+            <output class="convert-table__output-exchange" id="currency_converted_4"></output>
+
+        </section>
+        <section class="convert-table__input-percentage">
+            <h1 class="convert-table__title">
+                Ставки вкладів
+            </h1>
+        </section>
+
+    </section>
+    <section class="convert-table__graph-1">
+        <svg width="400" height="200"></svg>
+
+        <script src="scripts/graph-1.js"></script>
+    </section>
+    <section class="convert-table__graph-2">
+
+    </section>
+</div>
+
+<script>
+    var value_currency_1;
+    var value_currency_2;
+    var value_currency_3;
+    var value_currency_4;
+
+    var latest_currency_2;
+    var latest_currency_3;
+    var latest_currency_4;
+
+    value_currency_1 = value_currency_2 = value_currency_3 = value_currency_4 = 0;
+    d3.tsv("./data/data-latest.tsv", function (data) {
+        latest_currency_2 = +data[0].USD;
+        latest_currency_3 = +data[0].GBP;
+        latest_currency_4 = +data[0].CAD;
+        console.log(latest_currency_2);
+    });
+    addTo();
+
+</script>
+
+
+</body>
+</html>

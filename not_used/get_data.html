@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Use the XMLHttpRequest to get the content of a file.</h2>
+<p>The content is written in JSON format, and can easily be converted into a JavaScript object.</p>
+<script type="text/javascript" src="get_dates.js"></script>
+<script type="text/javascript" src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>
+<!--<script type="text/javascript" src="all-func.js"></script>-->
+<p id="demo"></p>
+<!--<script>-->
+    <!--function writeIntoFile(fileDescriptor, text) {-->
+        <!--fs.writeFile(fileDescriptor, text, (err) = > {-->
+            <!--if (err) {-->
+                <!--console.error(err);-->
+                <!--return;-->
+            <!--};-->
+    <!--}-->
+    <!--}-->
+<!--</script>-->
+<script>
+    // To write data
+    requirejs(["fs"], function() {
+        //This function is called when scripts/helper/util.js is loaded.
+        //If util.js calls define(), then this function is not fired until
+        //util's dependencies have loaded, and the util argument will hold
+        //the module value for "helper/util".
+        console.log("installed")
+    });
+
+    var fs = require("fs");
+    var sampleObject = "123";
+    var fileDescriptor = fs.openSync("./data/data.tsv", "a");
+    var fileHeader = "DATE EUR UAH USD RUB";
+    fs.writeFile(fileDescriptor, fileHeader, (err) => {
+        if (err) {
+            console.error(err);
+            return;
+        };
+    })
+        var getJSON = function (url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
+        };
+        xhr.send();
+    };
+    function get_data_from_api(api) {
+        getJSON(api,
+            function (err, data) {
+                if (err !== null) {
+                    alert('Something went wrong: ' + err);
+                } else {
+                    console.log(data.rates.AUD);
+                    console.log(data.rates);
+                    console.log(data)
+                    fs.writeFile(fileDescriptor, sampleObject, (err) => {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        };
+                    console.log("File has been created");
+                })
+                    ;
+                    //EUR
+                    //USD
+                    //UAH
+                    //RUB
+
+                }
+            });
+    }
+    get_data_from_api('https://ratesapi.io/api/2009-12-10')
+//    for (var i = 0; i < getRangeOfYears().length; i++) {
+////        console.log("here_1", get_data_from_api('https://ratesapi.io/api/2009-12-10'))
+////        console.log("here_2", get_data_from_api('https://ratesapi.io/api/2009-12-10'))
+//
+//    }
+</script>
+
+<p>Take a look at <a href="../json_demo.txt" target="_blank">json_demo.txt</a></p>
+
+</body>
+</html>
