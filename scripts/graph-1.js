@@ -26,7 +26,7 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
         return {
             currentCurrency: currentCurrency,
             values: data.map(function (d) {
-                return {date: d.date, currency: d[currentCurrency]};
+                return {date: d.date, currency: 1/d[currentCurrency]};
             })
         };
     });
