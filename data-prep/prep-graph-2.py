@@ -6,7 +6,7 @@ def get_data_with_api(url):
     return resp.json()["date"]+ "\t" + str(resp.json()["rates"]["USD"]) + "\t" + str(resp.json()["rates"]["GBP"])  + "\t" +  str(resp.json()["rates"]["CAD"]) + "\n"
 
 def get_range_of_dates():
-    years = ["2016", "2017"]
+    years = ["2017"]
     months = range(1,13)
     result = []
     for year in years:
@@ -20,11 +20,11 @@ def get_range_of_dates():
 def get_data():
     url = "https://ratesapi.io/api/"
     header = "date\tUSD\tGBP\tCAD\n"
-    with open("../data/data.tsv", "w") as myfile:
+    with open("../data/data-bar-chart.tsv", "w") as myfile:
         myfile.write(header)
         for date in get_range_of_dates():
-
+            print(date)
             myfile.write(get_data_with_api(url +date))
     return 1
 
-get_data()
+print(get_data())

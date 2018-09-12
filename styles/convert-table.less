@@ -1,0 +1,90 @@
+.convert-table {
+  width: 350px;
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-content: space-around;
+
+  &__input-section {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__currency-img {
+    width: 17px;
+    height: 12px;
+    padding-top: 10px;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  &__input-section:first-child {
+    width: 7px;
+  }
+
+  &__input-exchange {
+    width: 40px;
+    height: 9px;
+    margin-top: 5px;
+  }
+
+  &__output-exchange {
+    width: 70px;
+    height: 18px;
+    //background-color: #00a8e6;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 8px;
+    border-color: transparent;
+    font-size: 13px;
+    font-weight: bold;
+    overflow: auto;
+    padding-right: 2px;
+  }
+
+  &__input-fields {
+    display: flex;
+    flex-direction: column;
+    height: inherit;
+    background-color: wheat;
+    width: 33%;
+  }
+  &__converted-currency {
+    display: flex;
+    flex-direction: column;
+    width: inherit;
+    height: inherit;
+    background-color: whitesmoke;
+  }
+
+  &__input-percentage {
+    display: flex;
+    width: inherit;
+    height: inherit;
+    background-color: red;
+  }
+
+  &__title {
+    font-size: 12px;
+    height: 10%;
+    justify-content: center;
+    word-wrap: break-word;
+    margin-left: 11px;
+    margin-right: 14px;
+  }
+
+  &__graph-1 {
+    display: inherit;
+    width: 400px;
+    height: 200px;
+    margin-left: 70px;
+  }
+
+  &__graph-2 {
+    display: inherit;
+    width: 300px;
+    height: 200px;
+    margin-left: 70px;
+  }
+}
