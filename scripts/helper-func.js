@@ -7,35 +7,35 @@ function isNumberForPercentage(n) {
 
 
 function addTo() {
-    value_currency_1 = document.getElementById("currency_1").value;
-    value_currency_2 = document.getElementById("currency_2").value;
-    value_currency_3 = document.getElementById("currency_3").value;
-    value_currency_4 = document.getElementById("currency_4").value;
+    valueCurrency1 = document.getElementById("currency_1").value;
+    valueCurrency2 = document.getElementById("currency_2").value;
+    valueCurrency3 = document.getElementById("currency_3").value;
+    valueCurrency4 = document.getElementById("currency_4").value;
 
-    if (latest_currency_2 === undefined) {
+    if (latestCurrency2 === undefined) {
         return 0
     }
-    if (isNumber(value_currency_1)) {
-        document.getElementById("currency_converted_1").value = value_currency_1;
+    if (isNumber(valueCurrency1)) {
+        document.getElementById("currency_converted_1").value = valueCurrency1;
     }
     else {
         alert("Currency 1 needs to be a number")
     }
-    if (isNumber(value_currency_2)) {
-        document.getElementById("currency_converted_2").value = (value_currency_2 / latest_currency_2).toFixed(2);
+    if (isNumber(valueCurrency2)) {
+        document.getElementById("currency_converted_2").value = (valueCurrency2 / latestCurrency2).toFixed(2);
     }
     else {
         alert("Currency 2 needs to be a number");
     }
 
-    if (isNumber(value_currency_3)) {
-        document.getElementById("currency_converted_3").value = (value_currency_3 / latest_currency_3).toFixed(2);
+    if (isNumber(valueCurrency3)) {
+        document.getElementById("currency_converted_3").value = (valueCurrency3 / latestCurrency3).toFixed(2);
     }
     else {
         alert("Currency 3 needs to be a number");
     }
-    if (isNumber(value_currency_4)) {
-        document.getElementById("currency_converted_4").value = (value_currency_4 / latest_currency_4).toFixed(2);
+    if (isNumber(valueCurrency4)) {
+        document.getElementById("currency_converted_4").value = (valueCurrency4 / latestCurrency4).toFixed(2);
     }
     else {
         alert("Currency 4 needs to be a number");
@@ -45,14 +45,7 @@ function addTo() {
 
 function addToPercentage() {
     for (var i = 0; i < document.getElementsByClassName("convert-table__input-percentage-form").length; i++) {
-        if (document.getElementById("percentage_checkbox").checked) {
-            document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = false
-
-        }
-        else {
-            document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = true
-
-        }
+        document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = !document.getElementById("percentage_checkbox").checked;
     }
 
 
@@ -104,37 +97,39 @@ function redrowChart() {
 
     var yBar = d3.scaleLinear()
         .rangeRound([heightBar, 0]);
-
-    var colors = d3.scaleOrdinal(d3.schemeCategory20);
+    var colorCurrencies = ["red", "blue", "orange", "green"];
+    var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
     d3.tsv("./data/data-bar-chart.tsv", function (error, data) {
         if (error) throw error;
-        data.forEach(function (d, i, columns) {
+        data.forEach(function (d) {
             var t = 0;
             if (document.getElementById("percentage_checkbox").checked && value_percentage_1 !== undefined &&
-                value_currency_1 !== undefined) {
+                valueCurrency1 !== undefined) {
 
-                d.EUR_persentage = +value_currency_1 * +value_percentage_1 / 100;
-                d.USD_persentage = +d.USD * +value_percentage_2 / 100;
-                d.GBP_persentage = +d.GBP * +value_percentage_3 / 100;
-                d.CAD_persentage = +d.CAD * +value_percentage_4 / 100;
+                d.EUR_persentage = valueCurrency1 * +value_percentage_1 / 100;
+                d.USD_persentage = valueCurrency2 * value_percentage_2 / 100;
+                d.GBP_persentage = valueCurrency3 * value_percentage_3 / 100;
+                d.CAD_persentage = valueCurrency4 * value_percentage_4 / 100;
+
+                console.log(value_percentage_3, valueCurrency1)
             }
-            if (value_currency_1 !== undefined) {
-                d.EUR = +value_currency_1;
+            if (valueCurrency1 !== undefined) {
+                d.EUR = +valueCurrency1;
 
                 t += d.EUR;
-                t += +value_currency_2 / +d.USD;
-                t += +value_currency_3 / +d.GBP;
-                t += +value_currency_4 / +d.CAD;
+                t += valueCurrency2 / +d.USD;
+                t += valueCurrency3 / +d.GBP;
+                t += valueCurrency4 / +d.CAD;
 
-                d.USD = +value_currency_2 / +d.USD;
-                d.GBP = +value_currency_3 / +d.GBP;
-                d.CAD = +value_currency_4 / +d.CAD;
+                d.USD = valueCurrency2 / +d.USD;
+                d.GBP = valueCurrency3 / +d.GBP;
+                d.CAD = valueCurrency4 / +d.CAD;
 
                 if (document.getElementById("percentage_checkbox").checked) {
-                    t += d.EUR_persentage
-                    t += d.USD_persentage
-                    t += d.GBP_persentage
+                    t += d.EUR_persentage;
+                    t += d.USD_persentage;
+                    t += d.GBP_persentage;
                     t += d.CAD_persentage
                 }
 
@@ -165,7 +160,23 @@ function redrowChart() {
             .data(d3.stack().keys(keys)(data))
             .enter().append("g")
             .attr("fill", function (d) {
-                return colors(d.key);
+                switch(d.key) {
+
+                    case "EUR":
+                        return colorCurrencies[0];
+                        break;
+                    case "USD":
+                        return colorCurrencies[1];
+                        break;
+                    case "GBP":
+                        return colorCurrencies[2];
+                        break;
+                    case "CAD":
+                        return colorCurrencies[3];
+                        break;
+                    default:
+                        return colors(d.key);
+                }
             })
             .selectAll("rect")
             .data(function (d) {

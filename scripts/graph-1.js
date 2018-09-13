@@ -7,8 +7,10 @@ var svgLineChart = d3.select(".convert-table__line-graph"),
 
 var x = d3.scaleTime().range([0, widthLineChart]),
     y = d3.scaleLinear().range([heightLineChart, 0]),
-    colorsLineChart = d3.scaleOrdinal(d3.schemeCategory10),
-    timeParser = d3.timeParse("%Y-%m-%d");
+    colorCurrencies = ["red", "blue", "orange", "green"],
+    colorsLineChart = d3.scaleOrdinal(d3.schemeCategory10);
+
+timeParser = d3.timeParse("%Y-%m-%d");
 
 var line = d3.line()
     .curve(d3.curveBasis)
@@ -26,7 +28,7 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
         return {
             currentCurrency: currentCurrency,
             values: data.map(function (d) {
-                return {date: d.date, currency: 1/d[currentCurrency]};
+                return {date: d.date, currency: 1 / d[currentCurrency]};
             })
         };
     });
@@ -77,7 +79,22 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
             return line(d.values);
         })
         .style("stroke", function (d) {
-            return colorsLineChart(d.currentCurrency);
+            switch (d.currentCurrency) {
+                case "EUR":
+                    return colorCurrencies[0];
+                    break;
+                case "USD":
+                    return colorCurrencies[1];
+                    break;
+                case "GBP":
+                    return colorCurrencies[2];
+                    break;
+                case "CAD":
+                    return colorCurrencies[3];
+                    break;
+                default:
+                    return colorsLineChart(d.currentCurrency);
+            }
         });
 
     city.append("text")

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles/main-page.css" type="text/css"/>
     <script src="./scripts/helper-func.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 
     <title>ConvertApp</title>
 
@@ -91,34 +92,32 @@
 </div>
 
 <script>
-    var value_currency_1;
-    var value_currency_2;
-    var value_currency_3;
-    var value_currency_4;
+    var valueCurrency1;
+    var valueCurrency2;
+    var valueCurrency3;
+    var valueCurrency4;
 
-    var latest_currency_2;
-    var latest_currency_3;
-    var latest_currency_4;
+    var latestCurrency2;
+    var latestCurrency3;
+    var latestCurrency4;
 
     var value_percentage_1;
     var value_percentage_2;
     var value_percentage_3;
     var value_percentage_4;
 
-    value_currency_1 = value_currency_2 = value_currency_3 = value_currency_4 = 0;
+    valueCurrency1 = valueCurrency2 = valueCurrency3 = valueCurrency4 = 0;
     value_percentage_1 = value_percentage_2 = value_percentage_3 = value_percentage_4 = 0;
 
     d3.tsv("./data/data-latest.tsv", function (data) {
-        latest_currency_2 = +data[0].USD;
-        latest_currency_3 = +data[0].GBP;
-        latest_currency_4 = +data[0].CAD;
+        latestCurrency2 = +data[0].USD;
+        latestCurrency3 = +data[0].GBP;
+        latestCurrency4 = +data[0].CAD;
     });
 
     addTo();
     redrowChart()
 
 </script>
-
-
 </body>
 </html>
