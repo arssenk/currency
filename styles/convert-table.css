@@ -40,17 +40,14 @@
 .convert-table__input-fields {
   display: flex;
   flex-direction: column;
-  background-color: wheat;
 }
 .convert-table__converted-currency {
   display: flex;
   flex-direction: column;
-  background-color: whitesmoke;
 }
 .convert-table__input-percentage {
   display: flex;
   flex-direction: column;
-  background-color: red;
 }
 .convert-table__input-percentage-form {
   width: 40px;
