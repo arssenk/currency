@@ -8,3 +8,12 @@
   display: flex;
   flex-direction: row;
 }
+.main-page__header > p {
+  margin-top: 23px;
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.main-page__header > input {
+  margin-top: 9px;
+}

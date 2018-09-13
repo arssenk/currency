@@ -1,6 +1,10 @@
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
+function isNumberForPercentage(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n) && n>=0 && n <=100 ;
+}
+
 
 function addTo() {
     value_currency_1 = document.getElementById("currency_1").value;
@@ -37,7 +41,50 @@ function addTo() {
         alert("Currency 4 needs to be a number");
     }
     redrowChart()
+}
 
+function addToPercentage() {
+    for (var i = 0; i < document.getElementsByClassName("convert-table__input-percentage-form").length; i++) {
+        if (document.getElementById("percentage_checkbox").checked) {
+            document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = false
+
+        }
+        else {
+            document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = true
+
+        }
+    }
+
+
+    if (value_percentage_1 === undefined) {
+        return 0
+    }
+    if (isNumberForPercentage(document.getElementById("input_percentage_1").value)) {
+        value_percentage_1 = document.getElementById("input_percentage_1").value;
+    }
+    else {
+        alert("Percentage 1 needs to be a number")
+    }
+    if (isNumberForPercentage(document.getElementById("input_percentage_2").value)) {
+        value_percentage_2 = document.getElementById("input_percentage_2").value;
+    }
+    else {
+        alert("Percentage 2 needs to be a number");
+    }
+
+    if (isNumberForPercentage(document.getElementById("input_percentage_3").value)) {
+        value_percentage_3 = document.getElementById("input_percentage_3").value;
+    }
+    else {
+        alert("Percentage 3 needs to be a number");
+    }
+    if (isNumberForPercentage(document.getElementById("input_percentage_4").value)) {
+        value_percentage_4 = document.getElementById("input_percentage_4").value;
+    }
+    else {
+        alert("Percentage 4 needs to be a number");
+    }
+    redrowChart()
 
 }
 
@@ -58,35 +105,61 @@ function redrowChart() {
     var yBar = d3.scaleLinear()
         .rangeRound([heightBar, 0]);
 
-    var colors = d3.scaleOrdinal(d3.schemeCategory10);
+    var colors = d3.scaleOrdinal(d3.schemeCategory20);
 
     d3.tsv("./data/data-bar-chart.tsv", function (error, data) {
         if (error) throw error;
-        data.forEach(function (d) {
+        data.forEach(function (d, i, columns) {
             var t = 0;
+            if (document.getElementById("percentage_checkbox").checked && value_percentage_1 !== undefined &&
+                value_currency_1 !== undefined) {
+
+                d.EUR_persentage = +value_currency_1 * +value_percentage_1 / 100;
+                d.USD_persentage = +d.USD * +value_percentage_2 / 100;
+                d.GBP_persentage = +d.GBP * +value_percentage_3 / 100;
+                d.CAD_persentage = +d.CAD * +value_percentage_4 / 100;
+            }
             if (value_currency_1 !== undefined) {
-                t += +value_currency_1;
+                d.EUR = +value_currency_1;
+
+                t += d.EUR;
                 t += +value_currency_2 / +d.USD;
                 t += +value_currency_3 / +d.GBP;
                 t += +value_currency_4 / +d.CAD;
+
                 d.USD = +value_currency_2 / +d.USD;
                 d.GBP = +value_currency_3 / +d.GBP;
                 d.CAD = +value_currency_4 / +d.CAD;
+
+                if (document.getElementById("percentage_checkbox").checked) {
+                    t += d.EUR_persentage
+                    t += d.USD_persentage
+                    t += d.GBP_persentage
+                    t += d.CAD_persentage
+                }
+
             }
             d.total = t;
+
             return d;
 
         });
+        var keys = [];
 
-        var keys = ["USD", "GBP", "CAD"];
+        if (document.getElementById("percentage_checkbox").checked) {
+            keys = ["EUR", "EUR_persentage", "USD", "USD_persentage", "GBP", "GBP_persentage", "CAD", "CAD_persentage"];
+        }
+        else {
+            keys = ["EUR", "USD", "GBP", "CAD"];
+        }
         xBar.domain(data.map(function (d) {
             return d.date;
         }));
         yBar.domain([0, d3.max(data, function (d) {
             return d.total;
         })]);
-        colors.domain(keys);
 
+        colors.domain(keys);
         gBar.append("g")
             .selectAll("g")
             .data(d3.stack().keys(keys)(data))
@@ -120,7 +193,7 @@ function redrowChart() {
             .call(d3.axisLeft(yBar))
             .append("text")
             .attr("x", 30)
-            .attr("y", yBar(yBar.ticks().pop()))
+            .attr("y", yBar(yBar.ticks().pop()) + 4)
             .attr("fill", "black")
             .attr("font-weight", "bold")
             .text("EUR");

@@ -40,22 +40,23 @@
 .convert-table__input-fields {
   display: flex;
   flex-direction: column;
-  height: inherit;
   background-color: wheat;
-  width: 33%;
 }
 .convert-table__converted-currency {
   display: flex;
   flex-direction: column;
-  width: inherit;
-  height: inherit;
   background-color: whitesmoke;
 }
 .convert-table__input-percentage {
   display: flex;
-  width: inherit;
-  height: inherit;
+  flex-direction: column;
   background-color: red;
+}
+.convert-table__input-percentage-form {
+  width: 40px;
+  margin-top: 5px;
+  height: 9px;
+  margin-left: 10px;
 }
 .convert-table__title {
   font-size: 12px;
