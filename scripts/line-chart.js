@@ -1,40 +1,46 @@
-var svgLineChart = d3.select(".convert-table__line-graph"),
-    marginLineChart = {top: 20, right: 80, bottom: 30, left: 50},
-    widthLineChart = svgLineChart.attr("width") - marginLineChart.left - marginLineChart.right,
-    heightLineChart = svgLineChart.attr("height") - marginLineChart.top - marginLineChart.bottom,
-    gLineChart = svgLineChart.append("g").attr("transform", "translate(" + marginLineChart.left + "," + marginLineChart.top + ")");
+function startRenderingGraph1(data_1) {
+    let data  = Object.values(Object.assign({}, data_1));
+
+    d3.select(".convert-table__line-graph").remove();
+    d3.select(".convert-table__graph-1").append("svg").attr("class", "convert-table__line-graph").attr("width", 400).attr("height", 200);
+
+    var svgLineChart = d3.select(".convert-table__line-graph"),
+        marginLineChart = {top: 20, right: 80, bottom: 30, left: 50},
+        widthLineChart = svgLineChart.attr("width") - marginLineChart.left - marginLineChart.right,
+        heightLineChart = svgLineChart.attr("height") - marginLineChart.top - marginLineChart.bottom,
+        gLineChart = svgLineChart.append("g").attr("transform", "translate(" + marginLineChart.left + "," + marginLineChart.top + ")");
 
 
-var x = d3.scaleTime().range([0, widthLineChart]),
-    y = d3.scaleLinear().range([heightLineChart, 0]),
-    colorCurrencies = ["red", "blue", "orange", "green"],
-    colorsLineChart = d3.scaleOrdinal(d3.schemeCategory10);
+    var x = d3.scaleTime().range([0, widthLineChart]),
+        y = d3.scaleLinear().range([heightLineChart, 0]),
+        colorCurrencies = ["red", "blue", "orange", "green"],
+        colorsLineChart = d3.scaleOrdinal(d3.schemeCategory10);
 
-timeParser = d3.timeParse("%Y-%m-%d");
+    timeParser = d3.timeParse("%Y-%m-%d");
 
-var line = d3.line()
-    .curve(d3.curveBasis)
-    .x(function (d) {
-        return x(d.date);
-    })
-    .y(function (d) {
-        return y(d.currency);
-    });
+    var line = d3.line()
+        .curve(d3.curveBasis)
+        .x(function (d) {
+            return x(d.date);
+        })
+        .y(function (d) {
+            return y(d.currency);
+        });
 
-d3.tsv("./data/data.tsv", type, function (error, data) {
-    if (error) throw error;
-
-    var currencies = data.columns.slice(1).map(function (currentCurrency) {
+    var currencies = supportedCurrencies.filter(item => item !== choosenBoxValue).map(function (currentCurrencyToAssign) {
         return {
-            currentCurrency: currentCurrency,
+            currentCurrency: currentCurrencyToAssign,
             values: data.map(function (d) {
-                return {date: d.date, currency: 1 / d[currentCurrency]};
+                return {date: timeParser(d.date),
+                    currency: convertToChosenForGraph(d,
+                    currentCurrencyToAssign, choosenBoxValue)};
             })
         };
     });
 
+    //MinMax
     x.domain(d3.extent(data, function (d) {
-        return d.date;
+        return  timeParser(d.date);
     }));
 
     y.domain([
@@ -50,6 +56,7 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
         })
     ]);
 
+
     colorsLineChart.domain(currencies.map(function (c) {
         return c.currentCurrency;
     }));
@@ -57,16 +64,16 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
     gLineChart.append("g")
         .attr("class", "axis-bottom-chart-1")
         .attr("transform", "translate(0," + heightLineChart + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(5));
 
     gLineChart.append("g")
         .attr("class", "axis-left-chart-1")
         .call(d3.axisLeft(y))
         .append("text")
-        .attr("y", -1)
-        .attr("x", 0)
+        .attr("y", 0)
+        .attr("x", 25)
         .attr("fill", "#000")
-        .text("EUR");
+        .text(choosenBoxValue);
 
     var city = gLineChart.selectAll(".city")
         .data(currencies)
@@ -108,15 +115,9 @@ d3.tsv("./data/data.tsv", type, function (error, data) {
         .attr("y", 3)
         .style("font", "11px sans-serif")
         .text(function (d) {
+
             return d.currentCurrency;
         });
-});
 
-function type(d, k, columns) {
-    d.date = timeParser(d.date);
-    for (var i = 1, n = columns.length, c; i < n; ++i) {
-        d[c = columns[i]] = +d[c];
-    }
-    return d;
+    };
 
-}

@@ -2,12 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <link rel="stylesheet" href="styles/converter.css" type="text/css"/>
     <link rel="stylesheet" href="styles/convert-table.css" type="text/css"/>
     <link rel="stylesheet" href="styles/main-page.css" type="text/css"/>
+
     <script src="./scripts/helper-func.js"></script>
+    <script src="./scripts/bar-chart.js"></script>
+    <script src="./scripts/addings-func.js"></script>
+    <script src="./scripts/api-support.js"></script>
+    <script src="./scripts/converters.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="//d3js.org/d3-scale-chromatic.v0.3.min.js"></script>
 
     <title>ConvertApp</title>
 
@@ -17,10 +22,21 @@
     <h1 class="main-page__title">
         Прогноз збереження
     </h1>
+    <label for="percentage_checkbox"></label>
     <input type="checkbox" id="percentage_checkbox" name="subscribe" value="newsletter" onchange="addToPercentage()">
     <p>
         Ставки
     </p>
+    <section class="main-page__currency-choose">
+        <p> Валюта</p>
+        <label for="currency-choose-box-id"></label>
+        <select name="currency-choose-box" id="currency-choose-box-id" onchange="updateStatus()">
+            <option value="EUR" selected>EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="CAD">CAD</option>
+        </select>
+    </section>
 </section>
 <div class="converter">
     <section class="convert-table">
@@ -32,24 +48,33 @@
 
             <section class="convert-table__input-section">
                 <img src="./img/euro-currency-symbol.svg" alt="EUR" class="convert-table__currency-img">
-                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_1" value=0
+                <label for="currency_1"></label>
+                <input type="text" name="txt" class="convert-table__input-exchange"
+                       id="currency_1" value=0
                        onchange="addTo()">
             </section>
 
             <section class="convert-table__input-section">
                 <img src="./img/dollar-currency-sign.svg" alt="EUR" class="convert-table__currency-img">
-                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_2" value=0
-                       onchange="addTo()"></section>
+                <label for="currency_2"></label>
+                <input type="text" name="txt" class="convert-table__input-exchange"
+                       id="currency_2" value=0
+                       onchange="addTo()">
+            </section>
 
             <section class="convert-table__input-section">
                 <img src="./img/pound-symbol-variant.svg" alt="EUR" class="convert-table__currency-img">
-                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_3" value=0
+                <label for="currency_3"></label>
+                <input type="text" name="txt" class="convert-table__input-exchange"
+                       id="currency_3" value=0
                        onchange="addTo()">
             </section>
 
             <section class="convert-table__input-section">
                 <img src="./img/dollar-currency-symbol.svg" alt="EUR" class="convert-table__currency-img">
-                <input type="text" name="txt" class="convert-table__input-exchange" id="currency_4" value=0
+                <label for="currency_4"></label>
+                <input type="text" name="txt" class="convert-table__input-exchange"
+                       id="currency_4" value=0
                        onchange="addTo()"></section>
         </section>
 
@@ -62,61 +87,76 @@
             <output class="convert-table__output-exchange" id="currency_converted_2"></output>
             <output class="convert-table__output-exchange" id="currency_converted_3"></output>
             <output class="convert-table__output-exchange" id="currency_converted_4"></output>
-
         </section>
+
         <section class="convert-table__input-percentage">
+
             <h1 class="convert-table__title">
                 Ставки вкладів
             </h1>
+
+            <label for="input_percentage_1"></label>
             <input type="text" class="convert-table__input-percentage-form" id="input_percentage_1" value=0
                    onchange="addToPercentage()" disabled>
+
+            <label for="input_percentage_2"></label>
             <input type="text" class="convert-table__input-percentage-form" id="input_percentage_2" value=0
                    onchange="addToPercentage()" disabled>
+
+            <label for="input_percentage_3"></label>
             <input type="text" class="convert-table__input-percentage-form" id="input_percentage_3" value=0
                    onchange="addToPercentage()" disabled>
+
+            <label for="input_percentage_4"></label>
             <input type="text" class="convert-table__input-percentage-form" id="input_percentage_4" value=0
                    onchange="addToPercentage()" disabled>
+
         </section>
+
     </section>
 
     <section class="convert-table__graph-1">
         <svg class="convert-table__line-graph" width="400" height="200"></svg>
-        <script src="scripts/graph-1.js"></script>
+        <script src="scripts/line-chart.js"></script>
 
     </section>
     <section class="convert-table__graph-2">
-        <svg class="convert-table__bar-chart" width="400" height="200"></svg>
-        <script> redrowChart()</script>
+        <svg class="convert-table__bar-chart" width="500" height="200"></svg>
+        <script></script>
 
     </section>
 </div>
 
 <script>
-    var valueCurrency1;
-    var valueCurrency2;
-    var valueCurrency3;
-    var valueCurrency4;
+    let valueCurrency1;
+    let valueCurrency2;
+    let valueCurrency3;
+    let valueCurrency4;
 
-    var latestCurrency2;
-    var latestCurrency3;
-    var latestCurrency4;
+    let value_percentage_1;
+    let value_percentage_2;
+    let value_percentage_3;
+    let value_percentage_4;
 
-    var value_percentage_1;
-    var value_percentage_2;
-    var value_percentage_3;
-    var value_percentage_4;
-
+    let supportedCurrencies = ["EUR", "USD", "GBP", "CAD"];
+    let lastCurrencies = [];
+    let currencyHistory = [];
     valueCurrency1 = valueCurrency2 = valueCurrency3 = valueCurrency4 = 0;
     value_percentage_1 = value_percentage_2 = value_percentage_3 = value_percentage_4 = 0;
 
-    d3.tsv("./data/data-latest.tsv", function (data) {
-        latestCurrency2 = +data[0].USD;
-        latestCurrency3 = +data[0].GBP;
-        latestCurrency4 = +data[0].CAD;
-    });
 
-    addTo();
-    redrowChart()
+    let chooseBox = document.getElementById("currency-choose-box-id");
+    let choosenBoxValue = chooseBox.options[chooseBox.selectedIndex].text;
+
+    document.getElementById('currency-choose-box-id').onchange = function () {
+        updateStatus();
+    };
+    getHistoryData(currencyHistory);
+
+    if (lastCurrencies.CAD === undefined) {
+        disableInputCurrency(1)
+    }
+
 
 </script>
 </body>
