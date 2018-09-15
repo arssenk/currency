@@ -34,6 +34,16 @@ function disableForms(disableNotch) {
     disableInputCurrency(disableNotch);
     disableButton(disableNotch);
     disableCheckBox(disableNotch);
+    disableSelectBox(disableNotch)
+}
+
+function disableSelectBox(notch){
+    if (notch){
+        document.getElementById("currency-choose-box-id").setAttribute("disabled", "")
+    }
+    else {
+        document.getElementById("currency-choose-box-id").removeAttribute("disabled")
+    }
 }
 function updateDropDownValue() {
     chooseBox = document.getElementById("currency-choose-box-id");
