@@ -175,15 +175,8 @@
     let chooseBox = document.getElementById("currency-choose-box-id");
     let choosenBoxValue = chooseBox.options[chooseBox.selectedIndex].text;
 
-    addButton();
-    addBackgroundColorToInputForm()
-    getHistoryData(currencyHistory);
+    whenStart();
 
-    updateDropDownValue();
-    updateCurrencyInTitle();
-    document.getElementById('currency-choose-box-id').onchange = function () {
-        updateStatus();
-    };
 
 
 </script>

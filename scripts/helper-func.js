@@ -49,10 +49,25 @@ function updateStatus() {
     updateCurrencyInTitle();
     addToPercentage();
     addTo();
-    addBackgroundColorToInputForm()
+    addBackgroundColorToInputForm();
     startRenderingGraph1(currencyHistory);
     redrowChart(currencyHistory);
 
+}
+function whenStart() {
+
+    addButton();
+    getHistoryData(currencyHistory);
+
+    addBackgroundColorToInputForm();
+
+    updateDropDownValue();
+    updateCurrencyInTitle();
+
+
+    document.getElementById('currency-choose-box-id').onchange = function () {
+        updateStatus();
+    };
 }
 
 function mapCurrency(cur) {
