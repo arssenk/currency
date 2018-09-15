@@ -17,9 +17,8 @@ function redrowChart(data_1) {
     let yBar = d3.scaleLinear()
         .rangeRound([heightBar, 0]);
 
-    let colorCurrencies = ["yellow", "red", "blue", "orange", "green", "purple"];
 
-    let colors = d3.scaleOrdinal(d3.schemeCategory20);
+    let colors = d3.scaleOrdinal(d3.schemeCategory10);
 
     data.forEach(function (d) {
         let t = 0;
@@ -29,14 +28,14 @@ function redrowChart(data_1) {
 
             for (let i = 1; i < supportedCurrencies.length + 1; i++) {
                 d[supportedCurrencies[i - 1] + "_percentage"] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i],
-                        supportedCurrencies[i - 1], choosenBoxValue) * valuePercentageArray["valuePercentage"+i] / 100;
+                        supportedCurrencies[i - 1], choosenBoxValue) * valuePercentageArray["valuePercentage" + i] / 100;
             }
         }
 
 
         for (let i = 1; i < supportedCurrencies.length + 1; i++) {
             d[supportedCurrencies[i - 1]] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i], supportedCurrencies[i - 1],
-                    choosenBoxValue);
+                choosenBoxValue);
 
         }
 
@@ -73,17 +72,18 @@ function redrowChart(data_1) {
     yBar.domain([0, d3.max(data, function (d) {
         return d.total;
     })]);
-
     colors.domain(keys);
+
+
     gBar.append("g")
         .selectAll("g")
         .data(d3.stack().keys(keys)(data))
         .enter().append("g")
         .attr("fill", function (d) {
-            if (supportedCurrencies.length <= colorCurrencies.length){
-                return colorCurrencies[supportedCurrencies.indexOf(d.key)]
+            if (supportedCurrencies.includes(d.key)) {
+                return colorsForCurr[supportedCurrencies.indexOf(d.key)]
             }
-            else{
+            else {
                 return colors(d.key);
 
             }

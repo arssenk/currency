@@ -51,7 +51,7 @@ function startRenderingGraph1(data_1) {
     y.domain([
         d3.min(currencies, function (c) {
             return d3.min(c.values, function (d) {
-                return d.currency;
+                return d.currency - 0.1;
             });
         }),
         d3.max(currencies, function (c) {
@@ -73,7 +73,7 @@ function startRenderingGraph1(data_1) {
 
     gLineChart.append("g")
         .attr("class", "axis-left-chart-1")
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(y).ticks(10))
         .append("text")
         .attr("y", 0)
         .attr("x", 25)
@@ -86,13 +86,13 @@ function startRenderingGraph1(data_1) {
         .attr("class", "city");
 
     city.append("path")
-        .attr("class", "line")
+        .attr("class", "convert-table__line-graph-1")
         .attr("d", function (d) {
             return line(d.values);
         })
         .style("stroke", function (d) {
-            if (supportedCurrencies.length <= colorCurrencies.length){
-                return colorCurrencies[supportedCurrencies.indexOf(d.currentCurrency)]
+            if (supportedCurrencies.includes(d.currentCurrency)) {
+                return colorsForCurr[supportedCurrencies.indexOf(d.currentCurrency)]
             }
             else{
                 return colorsLineChart(d.currentCurrency);
@@ -101,7 +101,6 @@ function startRenderingGraph1(data_1) {
 
     city.append("text")
         .datum(function (d) {
-
             return {currentCurrency: d.currentCurrency, value: d.values[d.values.length - 1]};
         })
         .attr("transform", function (d) {

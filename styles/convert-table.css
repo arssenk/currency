@@ -13,9 +13,9 @@
 .convert-table__currency-img {
   width: 17px;
   height: 12px;
-  padding-top: 10px;
-  padding-right: 4px;
-  padding-left: 4px;
+  padding-top: 13px;
+  padding-right: 8px;
+  padding-left: 1px;
 }
 .convert-table__input-section:first-child {
   width: 7px;
@@ -32,9 +32,9 @@
   font-size: 12px;
 }
 .convert-table__input-exchange {
-  width: 40px;
-  height: 9px;
-  margin-top: 8px;
+  width: 46px;
+  height: 14px;
+  margin-top: 9px;
 }
 .convert-table__output-exchange {
   width: 70px;
@@ -87,10 +87,10 @@
   height: 200px;
   margin-left: 40px;
 }
-.line {
+.convert-table__line-graph-1 {
   fill: none;
   stroke-width: 2px;
 }
-.line:hover {
+.convert-table__line-graph-1:hover {
   fill: red;
 }

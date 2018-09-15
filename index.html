@@ -159,7 +159,7 @@
     valuePercentage1 = valuePercentage2 = valuePercentage3 = valuePercentage4 =
         valuePercentage5 = valuePercentage6 = 0;
 
-//    const colorsForCurr = ["#a7cc52", " #999900", "#4355CC", "#A7CC52", "#3ACCBC", "#18AECC", "#940ECC"];
+    const colorsForCurr = ["#999900", "#4355CC", "#A7CC52", "#3ACCBC", "#18AECC", "#940ECC"];
 
     let valueCurrencyArray = {
         valueCurrency1: valueCurrency1, valueCurrency2: valueCurrency2,
@@ -174,8 +174,9 @@
 
     let chooseBox = document.getElementById("currency-choose-box-id");
     let choosenBoxValue = chooseBox.options[chooseBox.selectedIndex].text;
-    addButton();
 
+    addButton();
+    addBackgroundColorToInputForm()
     getHistoryData(currencyHistory);
 
     updateDropDownValue();

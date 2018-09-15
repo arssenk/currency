@@ -20,8 +20,9 @@ function addLineOfFormsForCurrency() {
         addOutputCurrencyForm();
         addPercentageForm();
         addOptionToBox();
-        updateStatus();
         supportedCurrencies.push(hiddenCurrencies.pop());
+        updateStatus();
+
     }
     if (hiddenCurrencies.length === 0) {
         disableButton(1)
@@ -68,11 +69,10 @@ function addPercentageForm() {
     inputForm.className = "convert-table__input-percentage-form";
     inputForm.id = "input_percentage_" + (document.getElementsByClassName("convert-table__input-percentage-form").length + 1).toString();
     inputForm.type = "text";
-    inputForm.value = "0";
+    inputForm.setAttribute("value", "0");
 
     inputForm.onchange = addToPercentage;
     document.getElementsByClassName("convert-table__input-percentage")[0].append(inputForm);
-    addToPercentage();
 
 
 }

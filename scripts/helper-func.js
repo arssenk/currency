@@ -1,4 +1,3 @@
-
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -8,10 +7,10 @@ function isNumberForPercentage(n) {
 }
 
 
-function createDeepCopy(o){
+function createDeepCopy(o) {
     let r = [];
-    for (let i = 0; i<o.length; i++){
-        r.push(Object.assign({},o[i] ))
+    for (let i = 0; i < o.length; i++) {
+        r.push(Object.assign({}, o[i]))
     }
     return Object.values(r)
 }
@@ -27,11 +26,11 @@ function disableInputPercentage(disableNotch) {
         document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = !!disableNotch;
     }
 }
-function disableCheckBox(notch){
+function disableCheckBox(notch) {
     document.getElementById("percentage_checkbox").disabled = !!notch;
 }
 
-function disableForms(disableNotch){
+function disableForms(disableNotch) {
     disableInputCurrency(disableNotch);
     disableButton(disableNotch);
     disableCheckBox(disableNotch);
@@ -48,20 +47,35 @@ function updateStatus() {
 
     updateDropDownValue();
     updateCurrencyInTitle();
+    addToPercentage();
+    addTo();
+    addBackgroundColorToInputForm()
     startRenderingGraph1(currencyHistory);
     redrowChart(currencyHistory);
-    addTo();
 
 }
 
-function mapCurrency(cur){
+function mapCurrency(cur) {
     return colorsForCurr[supportedCurrenciesAll.indexOf(cur)]
 }
-function getRaangeOfAllPossibleKeys(){
-    let keys = []
+function getRaangeOfAllPossibleKeys() {
+    let keys = [];
     for (let i = 0; i < supportedCurrenciesAll.length; i++) {
         keys.push(supportedCurrenciesAll[i]);
         keys.push(supportedCurrenciesAll[i] + "_percentage")
     }
     return keys
+}
+
+function addBackgroundColorToInputForm() {
+    let items = document.getElementsByClassName("convert-table__input-exchange");
+    for (let i = 1; i < items.length + 1; i++) {
+
+        let currEll = document.getElementById("currency_" + i);
+
+        currEll.style["background-color"] = colorsForCurr[i - 1];
+        currEll.style["border-radius"] = "7px";
+
+    }
+
 }
