@@ -3,10 +3,9 @@
   display: flex;
   flex-direction: row;
 }
-.line {
-  fill: none;
-  stroke-width: 1px;
-}
-.line:hover {
-  fill: red;
+.converter__for-button {
+  width: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

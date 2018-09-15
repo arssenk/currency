@@ -1,4 +1,3 @@
-
 function convertToChosenCurrency(number, convertFrom, convertTo) {
     if (number === 0) {
         return 0

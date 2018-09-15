@@ -4,59 +4,68 @@ function redrowChart(data_1) {
     d3.select(".convert-table__bar-chart").remove();
     d3.select(".convert-table__graph-2").append("svg").attr("class", "convert-table__bar-chart").attr("width", 500).attr("height", 200);
 
-    var barChart = d3.select(".convert-table__bar-chart"),
+    let barChart = d3.select(".convert-table__bar-chart"),
         marginBar = {top: 30, right: 180, bottom: 30, left: 70},
         widthBar = +barChart.attr("width") - marginBar.left - marginBar.right,
         heightBar = +barChart.attr("height") - marginBar.top - marginBar.bottom,
         gBar = barChart.append("g").attr("transform", "translate(" + marginBar.left + "," + marginBar.top + ")");
 
-    var xBar = d3.scaleBand()
+    let xBar = d3.scaleBand()
         .rangeRound([0, widthBar])
         .paddingInner(0.1);
 
-    var yBar = d3.scaleLinear()
+    let yBar = d3.scaleLinear()
         .rangeRound([heightBar, 0]);
-    var colorCurrencies = ["red", "blue", "orange", "green"];
-    var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+    let colorCurrencies = ["yellow", "red", "blue", "orange", "green", "purple"];
+
+    let colors = d3.scaleOrdinal(d3.schemeCategory20);
 
     data.forEach(function (d) {
-        var t = 0;
-        if (document.getElementById("percentage_checkbox").checked && value_percentage_1 !== undefined &&
-            valueCurrency1 !== undefined) {
-            d.EUR_persentage = +convertToChosenCurrency(valueCurrency1, supportedCurrencies[0], choosenBoxValue) * value_percentage_1 / 100;
-            d.USD_persentage = +convertToChosenCurrency(valueCurrency2, supportedCurrencies[1], choosenBoxValue) * value_percentage_2 / 100;
-            d.GBP_persentage = +convertToChosenCurrency(valueCurrency3, supportedCurrencies[2], choosenBoxValue) * value_percentage_3 / 100;
-            d.CAD_persentage = +convertToChosenCurrency(valueCurrency3, supportedCurrencies[3], choosenBoxValue) * value_percentage_4 / 100;
+        let t = 0;
 
-        }
-        if (valueCurrency1 !== undefined) {
-            d.EUR = +convertToChosenCurrency(valueCurrency1, supportedCurrencies[0], choosenBoxValue);
-            d.USD = +convertToChosenCurrency(valueCurrency2, supportedCurrencies[1], choosenBoxValue);
-            d.GBP = +convertToChosenCurrency(valueCurrency3, supportedCurrencies[2], choosenBoxValue);
-            d.CAD = +convertToChosenCurrency(valueCurrency4, supportedCurrencies[3], choosenBoxValue);
-            t += d.EUR;
-            t += d.USD;
-            t += d.GBP;
-            t += d.CAD;
+        //if percents are avalible add them to d object for plotting
+        if (document.getElementById("percentage_checkbox").checked) {
 
-            if (document.getElementById("percentage_checkbox").checked) {
-                t += d.EUR_persentage;
-                t += d.USD_persentage;
-                t += d.GBP_persentage;
-                t += d.CAD_persentage
+            for (let i = 1; i < supportedCurrencies.length + 1; i++) {
+                d[supportedCurrencies[i - 1] + "_percentage"] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i],
+                        supportedCurrencies[i - 1], choosenBoxValue) * valuePercentageArray["valuePercentage"+i] / 100;
             }
         }
-        d.total = t;
-        return d;
 
+
+        for (let i = 1; i < supportedCurrencies.length + 1; i++) {
+            d[supportedCurrencies[i - 1]] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i], supportedCurrencies[i - 1],
+                    choosenBoxValue);
+
+        }
+
+        for (let i = 0; i < supportedCurrencies.length; i++) {
+            t += d[supportedCurrencies[i]]
+        }
+
+        if (document.getElementById("percentage_checkbox").checked) {
+            for (let i = 0; i < supportedCurrencies.length; i++) {
+                t += d[supportedCurrencies[i] + "_percentage"]
+            }
+        }
+
+        d.total = t;
+
+        return d;
     });
 
-    var keys = [];
+    let keys = [];
     if (document.getElementById("percentage_checkbox").checked) {
-        keys = ["EUR", "EUR_persentage", "USD", "USD_persentage", "GBP", "GBP_persentage", "CAD", "CAD_persentage"];
+
+        //Create "EUR", "EUR_percentage", ... keys
+        for (let i = 0; i < supportedCurrencies.length; i++) {
+            keys.push(supportedCurrencies[i]);
+            keys.push(supportedCurrencies[i] + "_percentage")
+        }
     }
     else {
-        keys = ["EUR", "USD", "GBP", "CAD"];
+        keys = supportedCurrencies;
     }
     xBar.domain(data.map(function (d) {
         return d.date;
@@ -71,21 +80,12 @@ function redrowChart(data_1) {
         .data(d3.stack().keys(keys)(data))
         .enter().append("g")
         .attr("fill", function (d) {
-            switch (d.key) {
-                case "EUR":
-                    return colorCurrencies[0];
-                    break;
-                case "USD":
-                    return colorCurrencies[1];
-                    break;
-                case "GBP":
-                    return colorCurrencies[2];
-                    break;
-                case "CAD":
-                    return colorCurrencies[3];
-                    break;
-                default:
-                    return colors(d.key);
+            if (supportedCurrencies.length <= colorCurrencies.length){
+                return colorCurrencies[supportedCurrencies.indexOf(d.key)]
+            }
+            else{
+                return colors(d.key);
+
             }
         })
         .selectAll("rect")
@@ -114,7 +114,7 @@ function redrowChart(data_1) {
         .call(d3.axisLeft(yBar))
         .append("text")
         .attr("x", 3)
-        .attr("y", yBar(yBar.ticks().pop())-12)
+        .attr("y", yBar(yBar.ticks().pop()) - 12)
         .attr("fill", "black")
         .attr("font-weight", "bold")
         .text(choosenBoxValue);

@@ -1,24 +1,25 @@
 function startRenderingGraph1(data_1) {
-    let data  = Object.values(Object.assign({}, data_1));
+
+    let data = Object.values(Object.assign({}, data_1));
 
     d3.select(".convert-table__line-graph").remove();
     d3.select(".convert-table__graph-1").append("svg").attr("class", "convert-table__line-graph").attr("width", 400).attr("height", 200);
 
-    var svgLineChart = d3.select(".convert-table__line-graph"),
+    let svgLineChart = d3.select(".convert-table__line-graph"),
         marginLineChart = {top: 20, right: 80, bottom: 30, left: 50},
         widthLineChart = svgLineChart.attr("width") - marginLineChart.left - marginLineChart.right,
         heightLineChart = svgLineChart.attr("height") - marginLineChart.top - marginLineChart.bottom,
         gLineChart = svgLineChart.append("g").attr("transform", "translate(" + marginLineChart.left + "," + marginLineChart.top + ")");
 
 
-    var x = d3.scaleTime().range([0, widthLineChart]),
+    let x = d3.scaleTime().range([0, widthLineChart]),
         y = d3.scaleLinear().range([heightLineChart, 0]),
-        colorCurrencies = ["red", "blue", "orange", "green"],
+        colorCurrencies = ["yellow", "red", "blue", "orange", "green", "purple"],
         colorsLineChart = d3.scaleOrdinal(d3.schemeCategory10);
 
     timeParser = d3.timeParse("%Y-%m-%d");
 
-    var line = d3.line()
+    let line = d3.line()
         .curve(d3.curveBasis)
         .x(function (d) {
             return x(d.date);
@@ -27,20 +28,24 @@ function startRenderingGraph1(data_1) {
             return y(d.currency);
         });
 
-    var currencies = supportedCurrencies.filter(item => item !== choosenBoxValue).map(function (currentCurrencyToAssign) {
+    let currencies = supportedCurrencies.filter(item => {
+        return item !== choosenBoxValue && supportedCurrencies.includes(item)
+    }).map(function (currentCurrencyToAssign) {
         return {
             currentCurrency: currentCurrencyToAssign,
             values: data.map(function (d) {
-                return {date: timeParser(d.date),
+                return {
+                    date: timeParser(d.date),
                     currency: convertToChosenForGraph(d,
-                    currentCurrencyToAssign, choosenBoxValue)};
+                        currentCurrencyToAssign, choosenBoxValue)
+                };
             })
         };
     });
 
     //MinMax
     x.domain(d3.extent(data, function (d) {
-        return  timeParser(d.date);
+        return timeParser(d.date);
     }));
 
     y.domain([
@@ -75,7 +80,7 @@ function startRenderingGraph1(data_1) {
         .attr("fill", "#000")
         .text(choosenBoxValue);
 
-    var city = gLineChart.selectAll(".city")
+    let city = gLineChart.selectAll(".city")
         .data(currencies)
         .enter().append("g")
         .attr("class", "city");
@@ -86,26 +91,17 @@ function startRenderingGraph1(data_1) {
             return line(d.values);
         })
         .style("stroke", function (d) {
-            switch (d.currentCurrency) {
-                case "EUR":
-                    return colorCurrencies[0];
-                    break;
-                case "USD":
-                    return colorCurrencies[1];
-                    break;
-                case "GBP":
-                    return colorCurrencies[2];
-                    break;
-                case "CAD":
-                    return colorCurrencies[3];
-                    break;
-                default:
-                    return colorsLineChart(d.currentCurrency);
+            if (supportedCurrencies.length <= colorCurrencies.length){
+                return colorCurrencies[supportedCurrencies.indexOf(d.currentCurrency)]
+            }
+            else{
+                return colorsLineChart(d.currentCurrency);
             }
         });
 
     city.append("text")
         .datum(function (d) {
+
             return {currentCurrency: d.currentCurrency, value: d.values[d.values.length - 1]};
         })
         .attr("transform", function (d) {
@@ -119,5 +115,5 @@ function startRenderingGraph1(data_1) {
             return d.currentCurrency;
         });
 
-    };
+};
 

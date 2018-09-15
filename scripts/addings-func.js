@@ -1,39 +1,17 @@
 function addTo() {
-    valueCurrency1 = document.getElementById("currency_1").value;
-    valueCurrency2 = document.getElementById("currency_2").value;
-    valueCurrency3 = document.getElementById("currency_3").value;
-    valueCurrency4 = document.getElementById("currency_4").value;
-
-    if (isNumber(valueCurrency1)) {
-        document.getElementById("currency_converted_1").value = convertToChosenCurrency(valueCurrency1,
-            supportedCurrencies[0], choosenBoxValue);
-    }
-    else {
-        alert("Currency 1 needs to be a number")
-    }
-    if (isNumber(valueCurrency2)) {
-        document.getElementById("currency_converted_2").value = convertToChosenCurrency(valueCurrency2,
-            supportedCurrencies[1], choosenBoxValue)
-    }
-    else {
-        alert("Currency 2 needs to be a number");
-    }
-
-    if (isNumber(valueCurrency3)) {
-        document.getElementById("currency_converted_3").value = convertToChosenCurrency(valueCurrency3,
-            supportedCurrencies[2], choosenBoxValue)
-    }
-    else {
-        alert("Currency 3 needs to be a number");
-    }
-    if (isNumber(valueCurrency4)) {
-        document.getElementById("currency_converted_4").value = convertToChosenCurrency(valueCurrency4,
-            supportedCurrencies[3], choosenBoxValue)
-    }
-    else {
-        alert("Currency 4 needs to be a number");
+    for (let i = 1; i < supportedCurrencies.length + 1; i++) {
+        if (isNumber(document.getElementById("currency_" + i).value)) {
+            valueCurrencyArray["valueCurrency" + i] = +document.getElementById("currency_" + i).value;
+            document.getElementById("currency_converted_" + i).value =
+                convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i],
+                    supportedCurrencies[i-1], choosenBoxValue)
+        }
+        else {
+            alert("Currency " + i + " needs to be a number")
+        }
     }
     redrowChart(currencyHistory)
+
 }
 
 function addToPercentage() {
@@ -42,33 +20,13 @@ function addToPercentage() {
     }
 
 
-    if (value_percentage_1 === undefined) {
-        return 0
-    }
-    if (isNumberForPercentage(document.getElementById("input_percentage_1").value)) {
-        value_percentage_1 = document.getElementById("input_percentage_1").value;
-    }
-    else {
-        alert("Percentage 1 needs to be a number")
-    }
-    if (isNumberForPercentage(document.getElementById("input_percentage_2").value)) {
-        value_percentage_2 = document.getElementById("input_percentage_2").value;
-    }
-    else {
-        alert("Percentage 2 needs to be a number");
-    }
-
-    if (isNumberForPercentage(document.getElementById("input_percentage_3").value)) {
-        value_percentage_3 = document.getElementById("input_percentage_3").value;
-    }
-    else {
-        alert("Percentage 3 needs to be a number");
-    }
-    if (isNumberForPercentage(document.getElementById("input_percentage_4").value)) {
-        value_percentage_4 = document.getElementById("input_percentage_4").value;
-    }
-    else {
-        alert("Percentage 4 needs to be a number");
+    for (let i = 1; i < supportedCurrencies.length + 1; i++) {
+        if (isNumberForPercentage(document.getElementById("input_percentage_" + i).value)) {
+            valuePercentageArray["valuePercentage" + i] = +document.getElementById("input_percentage_" + i).value;
+        }
+        else {
+            alert("Percentage " + i + " needs to be in range 0-100")
+        }
     }
     redrowChart(currencyHistory)
 }
