@@ -2,8 +2,10 @@ function redrowChart(data_1) {
     let data = createDeepCopy(data_1);
     let dataFourMonth = [];
 
+    // Current year chosen month
     for (let i = 0; i < data.length; i++) {
-        if (interestedMonth.includes(parseInt(data[i].date.split("-")[1])) && parseInt(data[i].date.split("-")[0]) === currentYear) {
+        if (interestedMonth.includes(parseInt(data[i].date.split("-")[1])) &&
+            parseInt(data[i].date.split("-")[0]) === currentYear) {
             dataFourMonth.push(data[i])
         }
     }
@@ -38,6 +40,7 @@ function redrowChart(data_1) {
                 dataFourMonth[i][supportedCurrencies[currencyIndex]] =
                     +convertToChosenCurrencyWithDate(valueCurrencyArray[currencyIndex],
                         supportedCurrencies[currencyIndex], choosenBoxValue, dataFourMonth[i].date)
+
             }
             else {
                 dataFourMonth[i][supportedCurrencies[currencyIndex]] =
@@ -48,16 +51,19 @@ function redrowChart(data_1) {
             totalValue += dataFourMonth[i][supportedCurrencies[currencyIndex]];
 
             if (document.getElementById("percentage_checkbox").checked) {
+
                 //Zero day
                 if (i === 0) {
                     dataFourMonth[i][supportedCurrencies[currencyIndex] + "_percentage"] = 0;
                 }
+
                 //Calculate complex percentage
                 else {
                     dataFourMonth[i][supportedCurrencies[currencyIndex] + "_percentage"] =
                         convertComplexPercentage(valueCurrencyArray[currencyIndex],
                             valuePercentageArray[currencyIndex], i);
                 }
+
                 //Convert to chosen currency
                 dataFourMonth[i][supportedCurrencies[currencyIndex] + "_percentage"] =
                     +convertToChosenCurrencyWithDate(dataFourMonth[i][supportedCurrencies[currencyIndex] + "_percentage"],

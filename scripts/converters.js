@@ -5,10 +5,10 @@ function convertToChosenCurrency(number, convertFrom, convertTo) {
     if (convertFrom === convertTo) {
         return number;
     }
-    if (convertFrom === "EUR") {
+    if (convertFrom === baseCurrency) {
         return (number * lastCurrencies[convertTo]).toFixed(2);
     }
-    if (convertTo === "EUR") {
+    if (convertTo === baseCurrency) {
         return (number / lastCurrencies[convertFrom]).toFixed(2);
     }
     return (number * lastCurrencies[convertTo] / lastCurrencies[convertFrom]).toFixed(2);
@@ -21,20 +21,21 @@ function convertToChosenCurrencyWithDate(number, convertFrom, convertTo, date) {
     if (convertFrom === convertTo) {
         return number;
     }
-    if (convertFrom === "EUR") {
-        return (number * getCurrencyObjectByDate(date)[convertTo])
+
+    if (convertTo === baseCurrency) {
+        return number / getCurrencyObjectByDate(date)[convertFrom]
     }
-    if (convertTo === "EUR") {
-        return (number / getCurrencyObjectByDate(date)[convertFrom])
+    if (getCurrencyObjectByDate(date)[convertFrom] === undefined) {
+        return number * getCurrencyObjectByDate(date)[convertTo]
     }
     return (number * getCurrencyObjectByDate(date)[convertTo] / getCurrencyObjectByDate(date)[convertFrom])
 }
 
 function convertToChosenForGraph(d, convertFrom, convertTo) {
-    if (convertTo === "EUR") {
+    if (convertTo === baseCurrency) {
         return 1 / d[convertFrom];
     }
-    else if (convertFrom === "EUR") {
+    else if (convertFrom === baseCurrency) {
         return 1 / d[convertTo]
     }
     else {
@@ -45,12 +46,11 @@ function convertToChosenForGraph(d, convertFrom, convertTo) {
 function getCurrencyObjectByDate(dateItem) {
     for (let i = 0; i < currencyHistory.length; i++) {
         if (currencyHistory[i].date === dateItem) {
-
             return currencyHistory[i];
         }
     }
 }
 
 function convertComplexPercentage(number, percentage, n) {
-    return number * Math.pow(1 + percentage / n / 100, n) - number;
+    return number * Math.pow(1 + percentage/ 100, n) - number;
 }

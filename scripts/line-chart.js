@@ -128,6 +128,7 @@ function startRenderingGraph1(data_1) {
 
             updateCurrency(d);
             redrowChart(currencyHistory);
+
         };
         drags[i] = d3.drag()
             .on('start', dragstarted)
