@@ -133,43 +133,28 @@
 </div>
 
 <script>
-    let valueCurrency1;
-    let valueCurrency2;
-    let valueCurrency3;
-    let valueCurrency4;
-    let valueCurrency5;
-    let valueCurrency6;
-
-
-    let valuePercentage1;
-    let valuePercentage2;
-    let valuePercentage3;
-    let valuePercentage4;
-    let valuePercentage5;
-    let valuePercentage6;
 
     let supportedCurrencies = ["EUR", "USD", "GBP", "CAD"];
     let hiddenCurrencies = ["PLN", "RON"];
     const supportedCurrenciesAll = supportedCurrencies.concat(hiddenCurrencies);
 
+    let currentYear = 2017;
+    let interestedMonth = [1, 3, 6, 9,12];
+
+
     let lastCurrencies = [];
     let currencyHistory = [];
 
-    valueCurrency1 = valueCurrency2 = valueCurrency3 = valueCurrency4 = valueCurrency5 = valueCurrency6 = 0;
-    valuePercentage1 = valuePercentage2 = valuePercentage3 = valuePercentage4 =
-        valuePercentage5 = valuePercentage6 = 0;
-
     const colorsForCurr = ["#999900", "#4355CC", "#A7CC52", "#3ACCBC", "#18AECC", "#940ECC"];
 
-    let valueCurrencyArray = {
-        valueCurrency1: valueCurrency1, valueCurrency2: valueCurrency2,
-        valueCurrency3: valueCurrency3, valueCurrency4: valueCurrency4
-    };
+    let valueCurrencyArray = [];
+    let valuePercentageArray = [];
 
-    let valuePercentageArray = {
-        valuePercentage1: valuePercentage1, valuePercentage2: valuePercentage2,
-        valuePercentage3: valuePercentage3, valuePercentage4: valuePercentage4
-    };
+    for (let i = 0; i < supportedCurrencies.length; i++){
+        valueCurrencyArray.push(0);
+        valuePercentageArray.push(0);
+    }
+
 
 
     let chooseBox = document.getElementById("currency-choose-box-id");

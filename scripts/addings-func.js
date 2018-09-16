@@ -1,9 +1,9 @@
 function addTo() {
     for (let i = 1; i < supportedCurrencies.length + 1; i++) {
         if (isNumber(document.getElementById("currency_" + i).value)) {
-            valueCurrencyArray["valueCurrency" + i] = +document.getElementById("currency_" + i).value;
+            valueCurrencyArray[ i-1] = +document.getElementById("currency_" + i).value;
             document.getElementById("currency_converted_" + i).value =
-                convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i],
+                convertToChosenCurrency(valueCurrencyArray[ i- 1],
                     supportedCurrencies[i-1], choosenBoxValue)
         }
         else {
@@ -22,7 +22,7 @@ function addToPercentage() {
 
     for (let i = 1; i < supportedCurrencies.length + 1; i++) {
         if (isNumberForPercentage(document.getElementById("input_percentage_" + i).value)) {
-            valuePercentageArray["valuePercentage" + i] = +document.getElementById("input_percentage_" + i).value;
+            valuePercentageArray[ i -1] = +document.getElementById("input_percentage_" + i).value;
         }
         else {
             alert("Percentage " + i + " needs to be in range 0-100")

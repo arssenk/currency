@@ -1,8 +1,17 @@
 function redrowChart(data_1) {
     let data = createDeepCopy(data_1);
+    let dataFourMonth = [];
+
+    for (let i = 0; i < data.length; i++) {
+        if (interestedMonth.includes(parseInt(data[i].date.split("-")[1])) && parseInt(data[i].date.split("-")[0]) === currentYear) {
+            dataFourMonth.push(data[i])
+        }
+    }
+
 
     d3.select(".convert-table__bar-chart").remove();
-    d3.select(".convert-table__graph-2").append("svg").attr("class", "convert-table__bar-chart").attr("width", 500).attr("height", 200);
+    d3.select(".convert-table__graph-2").append("svg").attr("class", "convert-table__bar-chart")
+        .attr("width", 500).attr("height", 200);
 
     let barChart = d3.select(".convert-table__bar-chart"),
         marginBar = {top: 30, right: 180, bottom: 30, left: 70},
@@ -20,41 +29,46 @@ function redrowChart(data_1) {
 
     let colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-    data.forEach(function (d) {
-        let t = 0;
+   //update values
+    for (let i = 0; i < dataFourMonth.length; i++) {
+        let totalValue = 0;
+        for (let currencyIndex = 1; currencyIndex < supportedCurrencies.length + 1; currencyIndex++) {
+            dataFourMonth[i][supportedCurrencies[currencyIndex - 1]] = valueCurrencyArray[currencyIndex - 1];
 
-        //if percents are avalible add them to d object for plotting
-        if (document.getElementById("percentage_checkbox").checked) {
+            dataFourMonth[i][supportedCurrencies[currencyIndex - 1]] = +convertToChosenCurrencyWithDate(
+                dataFourMonth[i][supportedCurrencies[currencyIndex - 1]],
+                supportedCurrencies[currencyIndex - 1],
+                choosenBoxValue, dataFourMonth[i].date
+            );
 
-            for (let i = 1; i < supportedCurrencies.length + 1; i++) {
-                d[supportedCurrencies[i - 1] + "_percentage"] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i],
-                        supportedCurrencies[i - 1], choosenBoxValue) * valuePercentageArray["valuePercentage" + i] / 100;
-            }
-        }
+            totalValue += dataFourMonth[i][supportedCurrencies[currencyIndex - 1]];
+
+            if (document.getElementById("percentage_checkbox").checked && i !== 0 ) {
 
 
-        for (let i = 1; i < supportedCurrencies.length + 1; i++) {
-            d[supportedCurrencies[i - 1]] = +convertToChosenCurrency(valueCurrencyArray["valueCurrency" + i], supportedCurrencies[i - 1],
-                choosenBoxValue);
+                if (isNaN(dataFourMonth[i - 1][supportedCurrencies[currencyIndex - 1] + "_percentage"])){
+                    dataFourMonth[i - 1][supportedCurrencies[currencyIndex - 1] + "_percentage"] = 0;
+                }
 
-        }
+                dataFourMonth[i][supportedCurrencies[currencyIndex - 1] + "_percentage"] =
+                    convertPlainDatePercentage(dataFourMonth[i - 1][supportedCurrencies[currencyIndex - 1]] +
+                        dataFourMonth[i - 1][supportedCurrencies[currencyIndex - 1] + "_percentage"],
+                        valuePercentageArray[currencyIndex-1]);
 
-        for (let i = 0; i < supportedCurrencies.length; i++) {
-            t += d[supportedCurrencies[i]]
-        }
+                dataFourMonth[i][supportedCurrencies[currencyIndex - 1] + "_percentage"] = +convertToChosenCurrencyWithDate(
+                    dataFourMonth[i][supportedCurrencies[currencyIndex - 1] + "_percentage"],
+                    supportedCurrencies[currencyIndex - 1],
+                    choosenBoxValue, dataFourMonth[i].date
+                );
 
-        if (document.getElementById("percentage_checkbox").checked) {
-            for (let i = 0; i < supportedCurrencies.length; i++) {
-                t += d[supportedCurrencies[i] + "_percentage"]
-            }
-        }
+                totalValue += dataFourMonth[i][supportedCurrencies[currencyIndex - 1] + "_percentage"]
 
-        d.total = t;
-
-        return d;
-    });
+        }}
+        dataFourMonth[i].total = totalValue;
+    }
 
     let keys = [];
+
     if (document.getElementById("percentage_checkbox").checked) {
 
         //Create "EUR", "EUR_percentage", ... keys
@@ -66,10 +80,11 @@ function redrowChart(data_1) {
     else {
         keys = supportedCurrencies;
     }
-    xBar.domain(data.map(function (d) {
+
+    xBar.domain(dataFourMonth.map(function (d) {
         return d.date;
     }));
-    yBar.domain([0, d3.max(data, function (d) {
+    yBar.domain([0, d3.max(dataFourMonth, function (d) {
         return d.total;
     })]);
     colors.domain(keys);
@@ -77,7 +92,7 @@ function redrowChart(data_1) {
 
     gBar.append("g")
         .selectAll("g")
-        .data(d3.stack().keys(keys)(data))
+        .data(d3.stack().keys(keys)(dataFourMonth))
         .enter().append("g")
         .attr("fill", function (d) {
             if (supportedCurrencies.includes(d.key)) {
@@ -119,7 +134,7 @@ function redrowChart(data_1) {
         .attr("font-weight", "bold")
         .text(choosenBoxValue);
 
-    //Leave last date
+//Leave last date
     d3.selectAll(".axis-bottom-bar>.tick:not(:last-child)").remove();
 
 }

@@ -37,8 +37,8 @@ function disableForms(disableNotch) {
     disableSelectBox(disableNotch)
 }
 
-function disableSelectBox(notch){
-    if (notch){
+function disableSelectBox(notch) {
+    if (notch) {
         document.getElementById("currency-choose-box-id").setAttribute("disabled", "")
     }
     else {
@@ -80,9 +80,7 @@ function whenStart() {
     };
 }
 
-function mapCurrency(cur) {
-    return colorsForCurr[supportedCurrenciesAll.indexOf(cur)]
-}
+
 function getRaangeOfAllPossibleKeys() {
     let keys = [];
     for (let i = 0; i < supportedCurrenciesAll.length; i++) {
@@ -97,7 +95,6 @@ function addBackgroundColorToInputForm() {
     for (let i = 1; i < items.length + 1; i++) {
 
         let currEll = document.getElementById("currency_" + i);
-
         currEll.style["background-color"] = colorsForCurr[i - 1];
         currEll.style["border-radius"] = "7px";
 
