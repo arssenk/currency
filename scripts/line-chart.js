@@ -99,7 +99,7 @@ function startRenderingGraph1(data_1) {
         };
     });
 
-    // Create focus group items and drug functions
+    // Create focus group items and drug functions for each currency
     for (let i = 0; i < supportedCurrencies.length; i++) {
         focusCurrencies[i] = svgLineChart.append("g")
             .attr("transform", "translate(" + marginLineChart.left + "," + marginLineChart.top + ")");
@@ -260,10 +260,7 @@ function startRenderingGraph1(data_1) {
     function updateCurrency(currencyItem) {
         for (let i = 0; i < currencyHistory.length; i++) {
             if (JSON.stringify(timeParser(currencyHistory[i].date)) === JSON.stringify(currencyItem.date)) {
-                // console.log(currencyHistory[i][currencyItem.currencyName] )
                 currencyHistory[i][currencyItem.currencyName] = 1 / currencyItem.currency;
-                // console.log(currencyHistory[i][currencyItem.currencyName] , currencyHistory[i].date)
-
                 return 1;
             }
         }

@@ -40,7 +40,7 @@ function getHistoryData(arr) {
         .then(resp => Promise.all(resp.map(r => processDataApi(r))))
         .then(resp => Promise.all(resp.map(r => arr.push(r))))
         .then(res => {
-                lastCurrencies = Object.assign({}, currencyHistory[currencyHistory.length - 1]);
+                lastCurrencies = Object.assign({}, currencyHistory[Math.floor(currencyHistory.length /2) +1]);
                 startRenderingGraph1(currencyHistory);
                 redrowChart(currencyHistory);
                 disableForms(0);

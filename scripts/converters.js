@@ -42,15 +42,15 @@ function convertToChosenForGraph(d, convertFrom, convertTo) {
     }
 }
 
-function getCurrencyObjectByDate(dateItem){
-    for (let i = 0; i < currencyHistory.length; i++){
-        if (currencyHistory[i].date === dateItem){
+function getCurrencyObjectByDate(dateItem) {
+    for (let i = 0; i < currencyHistory.length; i++) {
+        if (currencyHistory[i].date === dateItem) {
 
             return currencyHistory[i];
         }
     }
 }
 
-function convertPlainDatePercentage(number, percentage){
-    return number*percentage/100
+function convertComplexPercentage(number, percentage, n) {
+    return number * Math.pow(1 + percentage / n / 100, n) - number;
 }

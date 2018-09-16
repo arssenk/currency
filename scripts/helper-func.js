@@ -64,7 +64,7 @@ function updateStatus() {
     redrowChart(currencyHistory);
 
 }
-function whenStart() {
+function runAtStart() {
 
     addButton();
     getHistoryData(currencyHistory);
