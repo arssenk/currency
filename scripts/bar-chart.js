@@ -5,7 +5,7 @@ function redrowChart(data_1) {
     // Current year chosen month
     for (let i = 0; i < data.length; i++) {
         if (interestedMonth.includes(parseInt(data[i].date.split("-")[1])) &&
-            parseInt(data[i].date.split("-")[0]) === currentYear) {
+            !isCurrentYear(data[i].date)) {
             dataFourMonth.push(data[i])
         }
     }

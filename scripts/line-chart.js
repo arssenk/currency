@@ -6,7 +6,8 @@ function startRenderingGraph1(data_1) {
     let dataMoving = [];
 
     for (let i = 0; i < dataToSplit.length; i++) {
-        if (parseInt(dataToSplit[i].date.split("-")[0]) < currentYear) {
+        // if (parseInt(dataToSplit[i].date.split("-")[0]) < currentYear) {
+        if (isCurrentYear(dataToSplit[i].date)) {
             dataStatic.push(dataToSplit[i]);
         }
         else {

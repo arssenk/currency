@@ -1,16 +1,46 @@
-function generateDateRange() {
-    let years = ["2016", "2017"];
-    let result = [];
+function convertAYearAhead(item) {
+    item = Object.assign({}, item);
 
-    for (let i = 0; i < years.length; i++) {
-        for (let month = 1; month < 13; month++) {
-            if (month.toString().length === 1) {
-                result.push(years[i] + "-0" + month + "-05")
+    let date = item["date"];
+    let currYear = parseInt(date.split("-")[0]);
+    let currMonth = parseInt(date.split("-")[1]);
+    let currDay = parseInt(date.split("-")[2]);
+    item["date"] = ((currYear + 1) + "-" + currMonth + "-" + currDay);
+    // console.log("t", ((currYear + 1) + "-" + currMonth  + "-" +  currDay),)
+    return item
+}
+function generateYearBack(currDate, url) {
+    let currMonth = parseInt(currDate.split("-")[1]);
+    let currYear = parseInt(currDate.split("-")[0]);
+    // currentYear = currYear;
+    currentDate = currDate;
+    let result = [];
+    const maxMonth = 12;
+    for (let month = 1; month < maxMonth + 1; month++) {
+        // console.log(month, maxMonth + 1)
+
+        if ((month + currMonth) <= maxMonth) {
+
+            let monthToWrite = month + currMonth;
+            if (monthToWrite.toString().length === 1) {
+                result.push((currYear - 1) + "-0" + monthToWrite + "-05")
             }
             else {
-                result.push(years[i] + "-" + month + "-05")
+                result.push((currYear - 1) + "-" + monthToWrite + "-05")
             }
         }
+        else {
+            let monthToWrite = month - (maxMonth - currMonth);
+            if (monthToWrite.toString().length === 1) {
+                result.push((currYear) + "-0" + monthToWrite + "-05")
+            }
+            else {
+                result.push((currYear) + "-" + monthToWrite + "-05")
+            }
+        }
+    }
+    for (let i = 0; i < result.length; i++) {
+        result[i] = url + result[i];
     }
     return result
 
@@ -25,7 +55,7 @@ function processDataApi(data) {
         tmp[neededCurrencies[currentCurrency]] = data["rates"][neededCurrencies[currentCurrency]];
 
         //If added currency is not in api call
-        if (data["rates"][neededCurrencies[currentCurrency]] === undefined){
+        if (data["rates"][neededCurrencies[currentCurrency]] === undefined) {
             alert("Your added currency is not supported");
             throw "Your added currency is not supported";
         }
@@ -38,16 +68,31 @@ function getHistoryData(arr) {
     disableForms(1);
 
     const url = "https://ratesapi.io/api/";
-    let dates = generateDateRange();
-    for (let i = 0; i < dates.length; i++) {
-        dates[i] = url + dates[i];
-    }
-    Promise.all(dates.map(url => fetch(url)))
-        .then(resp => Promise.all(resp.map(r => r.json())))
-        .then(resp => Promise.all(resp.map(r => processDataApi(r))))
-        .then(resp => Promise.all(resp.map(r => arr.push(r))))
+
+    let getLatestData = fetch(url + "latest").then(resp => resp.json())
+        .then(resp => {
+            return generateYearBack(resp.date, url);
+        });
+
+    getLatestData.then(dates => {
+        return Promise.all(dates.map(url => fetch(url)))
+    })
+        .then(resp => {
+            return Promise.all(resp.map(r => r.json()))
+        })
+        .then(resp => resp.map(r => processDataApi(r)))
+        .then(resp => resp.map(r => {
+                arr.push(r)
+                return r;
+            })
+        )
+        .then(resp => {
+            resp.map(r => {
+                arr.push(convertAYearAhead(r))
+            })
+        })
         .then(res => {
-                lastCurrencies = Object.assign({}, currencyHistory[Math.floor(currencyHistory.length /2) +1]);
+                lastCurrencies = Object.assign({}, currencyHistory[Math.floor(currencyHistory.length / 2) + 1]);
                 startRenderingGraph1(currencyHistory);
                 redrowChart(currencyHistory);
                 disableForms(0);
@@ -55,5 +100,5 @@ function getHistoryData(arr) {
         )
         .catch(err => {
             console.log(err)
-        });
+        })
 }
