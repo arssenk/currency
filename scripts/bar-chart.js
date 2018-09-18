@@ -36,6 +36,7 @@ function redrowChart(data_1) {
         let totalValue = 0;
         for (let currencyIndex = 0; currencyIndex < supportedCurrencies.length; currencyIndex++) {
             if (i === 0) {
+
                 //Zero day
                 dataFourMonth[i][supportedCurrencies[currencyIndex]] =
                     +convertToChosenCurrencyWithDate(valueCurrencyArray[currencyIndex],
@@ -88,7 +89,6 @@ function redrowChart(data_1) {
     else {
         keys = supportedCurrencies;
     }
-
     xBar.domain(dataFourMonth.map(function (d) {
         return d.date;
     }));

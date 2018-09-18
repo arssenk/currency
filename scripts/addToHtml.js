@@ -22,6 +22,7 @@ function addLineOfFormsForCurrency() {
         addPercentageForm();
         addOptionToBox();
         supportedCurrencies.push(hiddenCurrencies.pop());
+        addDefaultValuesAtAddingNewForm();
         updateStatus();
     }
     if (hiddenCurrencies.length === 0) {
@@ -98,4 +99,9 @@ function addColorToSupportedColors() {
         color = generateColor();
     }
     colorsForCurr.push(color);
+}
+
+function addDefaultValuesAtAddingNewForm() {
+    valueCurrencyArray.push(0);
+    valuePercentageArray.push(0);
 }
