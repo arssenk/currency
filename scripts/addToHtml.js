@@ -16,13 +16,13 @@ function addButton() {
 function addLineOfFormsForCurrency() {
 
     if (hiddenCurrencies.length !== 0) {
+        addColorToSupportedColors();
         addInputCurrencyForm();
         addOutputCurrencyForm();
         addPercentageForm();
         addOptionToBox();
         supportedCurrencies.push(hiddenCurrencies.pop());
         updateStatus();
-
     }
     if (hiddenCurrencies.length === 0) {
         disableButton(1)
@@ -81,5 +81,21 @@ function addOptionToBox() {
     optionVal.value = hiddenCurrencies[hiddenCurrencies.length - 1];
     optionVal.innerHTML = hiddenCurrencies[hiddenCurrencies.length - 1];
     document.getElementById("currency-choose-box-id").append(optionVal);
+}
 
+function generateColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function addColorToSupportedColors() {
+    let color = generateColor();
+    while (colorsForCurr.includes(color)) {
+        color = generateColor();
+    }
+    colorsForCurr.push(color);
 }

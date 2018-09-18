@@ -19,7 +19,6 @@ function addToPercentage() {
         document.getElementsByClassName("convert-table__input-percentage-form")[i].disabled = !document.getElementById("percentage_checkbox").checked;
     }
 
-
     for (let i = 1; i < supportedCurrencies.length + 1; i++) {
         if (isNumberForPercentage(document.getElementById("input_percentage_" + i).value)) {
             valuePercentageArray[ i -1] = +document.getElementById("input_percentage_" + i).value;

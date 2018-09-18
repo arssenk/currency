@@ -21,7 +21,14 @@ function processDataApi(data) {
     let tmp = [];
 
     for (let currentCurrency = 0; currentCurrency < neededCurrencies.length; currentCurrency++) {
-        tmp[neededCurrencies[currentCurrency]] = data["rates"][neededCurrencies[currentCurrency]]
+
+        tmp[neededCurrencies[currentCurrency]] = data["rates"][neededCurrencies[currentCurrency]];
+
+        //If added currency is not in api call
+        if (data["rates"][neededCurrencies[currentCurrency]] === undefined){
+            alert("Your added currency is not supported");
+            throw "Your added currency is not supported";
+        }
     }
     tmp["date"] = data["date"];
     return tmp;
