@@ -1,0 +1,27 @@
+
+.bar-chart {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 27px;
+  height: 230px;
+
+  &__totals-container {
+    width: 232px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 64px;
+  }
+
+  //// Remove tick marks
+  &__axis-bottom line, &__axis-left line {
+    stroke: #fff;
+  }
+
+  // Remove the axis itself
+  &__axis-bottom  path, &__axis-left path {
+    display: none;
+  }
+}
+

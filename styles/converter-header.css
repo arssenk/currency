@@ -1,0 +1,49 @@
+.converter-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.converter-header > p {
+  margin-top: 27px;
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.converter-header > input {
+  margin-top: 10px;
+}
+.converter-header__title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-right: 15px;
+}
+.converter-header__container {
+  display: flex;
+}
+.converter-header__container > p {
+  margin-top: 24px;
+  margin-left: 5px;
+}
+.converter-header__container > input {
+  margin-top: 5px;
+}
+.converter-header__currency-choose {
+  display: flex;
+  flex-direction: row;
+  margin-top: 7px;
+  margin-right: 4px;
+}
+.converter-header__currency-choose > p {
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 18px;
+  margin-right: 5px;
+}
+.converter-header__currency-choose > select {
+  width: 62px;
+  height: 25px;
+  font-size: 13px;
+  margin-top: 12px;
+  margin-left: 5px;
+}

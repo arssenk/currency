@@ -1,6 +1,5 @@
 .convert-table {
-  width: 350px;
-  height: 30%;
+  width: 290px;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -12,11 +11,12 @@
   }
 
   &__currency-img {
-    width: 17px;
-    height: 12px;
-    padding-top: 13px;
-    padding-right: 8px;
-    padding-left:1px;
+    width: 11px;
+    height: 16px;
+    margin-top: 5px;
+    margin-right: 8px;
+    margin-left: 12px;
+    border-radius: 4px;
   }
 
   &__input-section:first-child {
@@ -24,40 +24,45 @@
   }
 
   &__add-currency-button {
-    width: 70px;
+    width: 79px;
     height: 22px;
-    margin-left: 16px;
+    margin-left: 10px;
     margin-top: 4px;
-    border-radius: 16px;
-    background-color: darkcyan;
+    border-radius: 6px;
+    //background-color: #0080ff;
+    color: white;
+    font-size: 13px;
+
     > span {
       font-size: 12px;
     }
   }
 
   &__input-exchange {
-    width: 49px;
+    width: 59px;
     height: 14px;
-    margin-top: 9px;
+    margin-top: 5px;
+    border-color: #595959;
+    border-radius: 5px;
+    border-width: 1px;
   }
 
   &__output-exchange {
     width: 70px;
     height: 18px;
-    margin-left: 10px;
+    margin-left: 9px;
     margin-right: 5px;
-    margin-top: 11px;
+    margin-top: 5px;
     border-color: transparent;
     font-size: 13px;
-    font-weight: bold;
     overflow: auto;
-    padding-right: 2px;
   }
 
   &__input-fields {
     display: flex;
     flex-direction: column;
   }
+
   &__converted-currency {
     display: flex;
     flex-direction: column;
@@ -68,48 +73,26 @@
     flex-direction: column;
 
   }
+
   &__input-percentage-form {
-    width: 40px;
-    margin-top: 8px;
-    height: 9px;
-    margin-left: 10px;
+    width: 52px;
+    margin-top: 5px;
+    height: 14px;
+    margin-left: 8px;
+    background-color: white;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #595959;
   }
 
   &__title {
     font-size: 12px;
-    height: 10%;
+    height: 15%;
     justify-content: center;
     word-wrap: break-word;
     margin-left: 11px;
-    margin-right: 14px;
-    margin-bottom: 24px;
+    margin-right: 10px;
   }
-
-  &__graph-1 {
-    display: inherit;
-    width: 400px;
-    height: 200px;
-    margin-left: 70px;
-
-
-  }
-
-  &__graph-2 {
-    display: inherit;
-    width: 400px;
-    height: 200px;
-    margin-left: 40px;
-  }
-
-  &__line-graph-1 {
-    fill: none;
-    stroke-width: 2px;
-  }
-
-  &__line-graph-1:hover {
-    fill: red;
-  }
-
 }
 
 

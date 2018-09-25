@@ -1,0 +1,41 @@
+.line-chart > p {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  margin-left: 50px;
+}
+.line-chart > p:last-of-type {
+  color: grey;
+  font-size: 10px;
+  margin-top: 0;
+}
+.line-chart__path {
+  fill: none;
+  stroke-width: 2px;
+}
+.line-chart__path:hover {
+  fill: red;
+}
+.line-chart__axis-bottom line,
+.line-chart__axis-left line {
+  stroke: #fff;
+}
+.line-chart__axis-bottom path,
+.line-chart__axis-left path {
+  display: none;
+}
+.line-chart__grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.3;
+  shape-rendering: crispEdges;
+  stroke-width: 1px;
+}
+.line-chart__grid path {
+  stroke-width: 1px;
+  stroke-opacity: 0.2;
+  stroke: lightgrey;
+  shape-rendering: crispEdges;
+}
+.line-chart__grid .tick > text {
+  font-size: 10px;
+}

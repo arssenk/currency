@@ -1,0 +1,22 @@
+.bar-chart {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-top: 27px;
+  height: 230px;
+}
+.bar-chart__totals-container {
+  width: 232px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 64px;
+}
+.bar-chart__axis-bottom line,
+.bar-chart__axis-left line {
+  stroke: #fff;
+}
+.bar-chart__axis-bottom path,
+.bar-chart__axis-left path {
+  display: none;
+}

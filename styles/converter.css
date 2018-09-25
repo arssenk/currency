@@ -1,11 +1,15 @@
 .converter {
-  margin-left: 10px;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  height: 280px;
+  margin-left: 10px;
 }
 .converter__for-button {
-  width: auto;
-  height: 100%;
   display: flex;
   flex-direction: column;
+}
+.converter__container-for-graphs {
+  display: flex;
+  justify-content: space-between;
 }

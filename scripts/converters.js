@@ -21,24 +21,34 @@ function convertToChosenCurrencyWithDate(number, convertFrom, convertTo, date) {
     if (convertFrom === convertTo) {
         return number;
     }
-
+    // console.log("here", number, convertFrom, convertTo)
     if (convertTo === baseCurrency) {
+        // console.log("here 1", number / getCurrencyObjectByDate(date)[convertFrom])
         return number / getCurrencyObjectByDate(date)[convertFrom]
     }
+
     if (getCurrencyObjectByDate(date)[convertFrom] === undefined) {
+        // console.log("here 2", number * getCurrencyObjectByDate(date)[convertTo])
         return number * getCurrencyObjectByDate(date)[convertTo]
     }
-    return (number * getCurrencyObjectByDate(date)[convertTo] / getCurrencyObjectByDate(date)[convertFrom])
+    // console.log("here 3", number * getCurrencyObjectByDate(date)[convertTo] / getCurrencyObjectByDate(date)[convertFrom])
+
+    return number * getCurrencyObjectByDate(date)[convertTo] / getCurrencyObjectByDate(date)[convertFrom]
 }
 
 function convertToChosenForGraph(d, convertFrom, convertTo) {
     if (convertTo === baseCurrency) {
+        // console.log("here 1", d, convertFrom, convertTo, "res", 1 / d[convertFrom])
         return 1 / d[convertFrom];
     }
     else if (convertFrom === baseCurrency) {
-        return 1 / d[convertTo]
+        // console.log("here 2", d, convertFrom, convertTo, "res", 1 / d[convertTo])
+
+        return d[convertTo]
     }
     else {
+        // console.log("here 3", d, convertFrom, convertTo, "res", d[convertTo] / d[convertFrom])
+
         return d[convertTo] / d[convertFrom]
     }
 }

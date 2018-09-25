@@ -1,46 +1,55 @@
-function convertAYearAhead(item) {
-    item = Object.assign({}, item);
+function createDatesAYearAhead() {
+    let result = [];
+    let currYear = parseInt(currentDate.split("-")[0]);
+    let currMonth = parseInt(currentDate.split("-")[1]);
+    let currDay = parseInt(currentDate.split("-")[2]);
+    let monthToWrite = 0;
+    let yearToWrite = 0;
+    for (let i = 1; i <= 4; i++) {
 
-    let date = item["date"];
-    let currYear = parseInt(date.split("-")[0]);
-    let currMonth = parseInt(date.split("-")[1]);
-    let currDay = parseInt(date.split("-")[2]);
-    item["date"] = ((currYear + 1) + "-" + currMonth + "-" + currDay);
-    // console.log("t", ((currYear + 1) + "-" + currMonth  + "-" +  currDay),)
-    return item
+        if (3 * i + currMonth > 12) {
+            monthToWrite = 3 * i + currMonth - 12;
+            yearToWrite = currYear + 1;
+        }
+        else {
+            monthToWrite = 3 * i + currMonth;
+            yearToWrite = currYear;
+        }
+        result.push(convertToYYMMDDFormat(yearToWrite, monthToWrite, currDay));
+    }
+    return result;
 }
-function generateYearBack(currDate, url) {
+function generateYearBack(currDate, url, userKey) {
     let currMonth = parseInt(currDate.split("-")[1]);
     let currYear = parseInt(currDate.split("-")[0]);
-    // currentYear = currYear;
     currentDate = currDate;
     let result = [];
     const maxMonth = 12;
+    let monthToWrite = 0;
+    let yearToWrite = 0;
     for (let month = 1; month < maxMonth + 1; month++) {
-        // console.log(month, maxMonth + 1)
-
         if ((month + currMonth) <= maxMonth) {
-
-            let monthToWrite = month + currMonth;
-            if (monthToWrite.toString().length === 1) {
-                result.push((currYear - 1) + "-0" + monthToWrite + "-05")
-            }
-            else {
-                result.push((currYear - 1) + "-" + monthToWrite + "-05")
-            }
+            monthToWrite = month + currMonth;
+            yearToWrite = currYear - 1
         }
         else {
-            let monthToWrite = month - (maxMonth - currMonth);
-            if (monthToWrite.toString().length === 1) {
-                result.push((currYear) + "-0" + monthToWrite + "-05")
-            }
-            else {
-                result.push((currYear) + "-" + monthToWrite + "-05")
+            monthToWrite = month - (maxMonth - currMonth);
+            yearToWrite = currYear;
+        }
+        for (let dayToWrite = 1; dayToWrite <= getdaysInMonth(yearToWrite, monthToWrite); dayToWrite++) {
+            if (isCurrentYear(convertToYYMMDDFormat(yearToWrite, monthToWrite, dayToWrite))) {
+                result.push(convertToYYMMDDFormat(yearToWrite, monthToWrite, dayToWrite));
             }
         }
     }
+
     for (let i = 0; i < result.length; i++) {
-        result[i] = url + result[i];
+        if (result[i] !== currentDate) {
+            result[i] = url + "historical/" + result[i] + ".json?app_id=" + userKey;
+        }
+        else {
+            result.splice(i, 1)
+        }
     }
     return result
 
@@ -63,38 +72,58 @@ function processDataApi(data) {
     tmp["date"] = data["date"];
     return tmp;
 }
+
 //Gets a data for 2 consecutive years
 function getHistoryData(arr) {
     disableForms(1);
 
-    const url = "https://ratesapi.io/api/";
+    const url = "https://openexchangerates.org/api/";
+    const userKey = "12046b6b63cb4907a5f4614618796747";
 
-    let getLatestData = fetch(url + "latest").then(resp => resp.json())
+    let getLatestData = fetch(url + "latest.json?app_id=" + userKey).then(resp => resp.json())
         .then(resp => {
-            return generateYearBack(resp.date, url);
+            let dateTimastampLatest = new Date(resp.timestamp * 1000);
+            resp.date = convertToYYMMDDFormat(dateTimastampLatest.getFullYear(),
+                dateTimastampLatest.getMonth() + 1, dateTimastampLatest.getDate());
+            return generateYearBack(resp.date, url, userKey);
         });
 
     getLatestData.then(dates => {
-        return Promise.all(dates.map(url => fetch(url)))
+        return Promise.all(dates.map(url => {
+            return fetch(url)
+        }))
     })
         .then(resp => {
-            return Promise.all(resp.map(r => r.json()))
+            return Promise.all(resp.map(r => r.json()
+            ))
         })
-        .then(resp => resp.map(r => processDataApi(r)))
         .then(resp => resp.map(r => {
-                arr.push(r)
+            let dateTimastamp = new Date(r.timestamp * 1000);
+            r.date = convertToYYMMDDFormat(dateTimastamp.getFullYear(), dateTimastamp.getMonth() + 1, dateTimastamp.getDate());
+            return processDataApi(r)
+        }))
+        .then(resp => resp.map(r => {
+                if (r.date === currentDate) {
+                    lastCurrencies = Object.assign({}, r);
+                }
+                arr.push(r);
                 return r;
             })
         )
         .then(resp => {
-            resp.map(r => {
-                arr.push(convertAYearAhead(r))
-            })
+            let tmpDataItem;
+            let datesToAssign = createDatesAYearAhead();
+            for (let dataIndex = 0; dataIndex <= 3; dataIndex++) {
+                tmpDataItem = Object.assign({}, resp[dataIndex])
+                tmpDataItem.date = datesToAssign[dataIndex];
+                arr.push(tmpDataItem)
+            }
         })
         .then(res => {
-                lastCurrencies = Object.assign({}, currencyHistory[Math.floor(currencyHistory.length / 2) + 1]);
-                startRenderingGraph1(currencyHistory);
-                redrowChart(currencyHistory);
+                // addTo();
+                // startRenderingGraph1(arr);
+                // redrowChart(arr);
+                updateStatus()
                 disableForms(0);
             }
         )

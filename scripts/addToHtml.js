@@ -1,27 +1,23 @@
-function addButton() {
-    let currencyAddButton = document.createElement("BUTTON");
-    currencyAddButton.className = "convert-table__add-currency-button";
-    let spanTagInButton = document.createElement("SPAN");
-    let spanValue = document.createTextNode("Валюта");
-    spanTagInButton.appendChild(spanValue)
-    currencyAddButton.appendChild(spanValue);
-    currencyAddButton.onclick = function () {
-        addLineOfFormsForCurrency()
-    };
-
-    document.getElementsByClassName("converter__for-button")[0].append(currencyAddButton);
-
-}
-
-function addLineOfFormsForCurrency() {
-
+function addNewCurrency(curr) {
     if (hiddenCurrencies.length !== 0) {
         addColorToSupportedColors();
-        addInputCurrencyForm();
+        addInputCurrencyForm(curr);
         addOutputCurrencyForm();
         addPercentageForm();
-        addOptionToBox();
-        supportedCurrencies.push(hiddenCurrencies.pop());
+        addOptionToBox(curr);
+
+        let currTxt = hiddenCurrenciesTXT[hiddenCurrencies.indexOf(curr)];
+        supportedCurrencies.push(curr);
+        supportedCurrenciesTXT.push(currTxt);
+
+        hiddenCurrencies = hiddenCurrencies.filter(function (item) {
+            return item !== curr
+        });
+
+        hiddenCurrenciesTXT = hiddenCurrenciesTXT.filter(function (item) {
+            return item !== currTxt
+        });
+
         addDefaultValuesAtAddingNewForm();
         updateStatus();
     }
@@ -29,18 +25,25 @@ function addLineOfFormsForCurrency() {
         disableButton(1)
     }
 }
+
 function disableButton(notch) {
     document.getElementsByClassName("convert-table__add-currency-button")[0].disabled = !!notch;
-
+    if (notch) {
+        document.getElementsByClassName("convert-table__add-currency-button")[0].style["background-color"] = "grey";
+    }
+    else {
+        document.getElementsByClassName("convert-table__add-currency-button")[0].style["background-color"] = "#0080ff";
+    }
 }
-function addInputCurrencyForm() {
+
+function addInputCurrencyForm(curr) {
     let sectionForOutputFrom = document.createElement("SECTION");
     sectionForOutputFrom.className = "convert-table__input-section";
 
     let imageForOutputFrom = document.createElement("img");
     imageForOutputFrom.className = "convert-table__currency-img";
-    imageForOutputFrom.src = "./img/" + hiddenCurrencies[hiddenCurrencies.length - 1] + ".gif";
-    imageForOutputFrom.alt = hiddenCurrencies[hiddenCurrencies.length - 1];
+    imageForOutputFrom.src = "./img/" + curr + ".svg";
+    imageForOutputFrom.alt = curr;
 
 
     let inputForm = document.createElement("INPUT");
@@ -56,6 +59,7 @@ function addInputCurrencyForm() {
 
     document.getElementsByClassName("convert-table__input-fields")[0].append(sectionForOutputFrom);
 }
+
 function addOutputCurrencyForm() {
     let outputElement = document.createElement("OUTPUT");
     outputElement.className = "convert-table__output-exchange";
@@ -77,10 +81,10 @@ function addPercentageForm() {
 
 
 }
-function addOptionToBox() {
+function addOptionToBox(curr) {
     let optionVal = document.createElement("OPTION");
-    optionVal.value = hiddenCurrencies[hiddenCurrencies.length - 1];
-    optionVal.innerHTML = hiddenCurrencies[hiddenCurrencies.length - 1];
+    optionVal.value = curr;
+    optionVal.innerHTML = curr;
     document.getElementById("currency-choose-box-id").append(optionVal);
 }
 
@@ -104,4 +108,22 @@ function addColorToSupportedColors() {
 function addDefaultValuesAtAddingNewForm() {
     valueCurrencyArray.push(0);
     valuePercentageArray.push(0);
+}
+
+function addOptionsToModalWindow() {
+    let placeToAdd = document.getElementsByClassName("modal_container")[0];
+    for (let currCurrencyIndex = 0; currCurrencyIndex < hiddenCurrencies.length; currCurrencyIndex++) {
+        let currencyAddButton = document.createElement("BUTTON");
+        currencyAddButton.className = "modal__currency-button";
+        let spanTagInButton = document.createElement("SPAN");
+        let spanValue = document.createTextNode(hiddenCurrencies[currCurrencyIndex]);
+        spanTagInButton.appendChild(spanValue);
+        currencyAddButton.appendChild(spanValue);
+        currencyAddButton.onclick = function () {
+            addNewCurrency(this.childNodes[0].data);
+            this.remove()
+        };
+
+        placeToAdd.append(currencyAddButton);
+    }
 }
